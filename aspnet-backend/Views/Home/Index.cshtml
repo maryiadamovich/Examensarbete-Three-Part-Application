@@ -1,0 +1,12 @@
+@using AspnetBackend.Helpers
+@inject Microsoft.AspNetCore.Hosting.IWebHostEnvironment Env
+@{
+    ViewData["Title"] = "Home";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div id="content"></div>
+
+@section Scripts {
+  <script src="@ReactHelper.GetBundlePath(Env, "home.js")"></script>
+}

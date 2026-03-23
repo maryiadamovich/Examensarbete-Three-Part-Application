@@ -1,0 +1,18 @@
+# Node
+node_modules/
+npm-debug.log*
+
+# Build output
+frontend/dist/
+aspnet-backend/wwwroot/dist/
+
+# .NET
+aspnet-backend/bin/
+aspnet-backend/obj/
+
+# SQLite
+*.db
+
+# OS
+.DS_Store
+Thumbs.db
