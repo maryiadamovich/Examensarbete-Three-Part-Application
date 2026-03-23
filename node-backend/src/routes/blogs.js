@@ -22,4 +22,14 @@ router.get('/', (req, res) => {
   res.json({ posts, nextCursor });
 });
 
+router.post('/', (req, res) => {
+  const { title, content } = req.body;
+  if (!title || !content) {
+    return res.status(400).json({ error: 'title and content are required' });
+  }
+  const result = db.prepare('INSERT INTO posts (title, content) VALUES (?, ?)').run(title, content);
+  const post = db.prepare('SELECT * FROM posts WHERE id = ?').get(result.lastInsertRowid);
+  res.status(201).json(post);
+});
+
 module.exports = router;

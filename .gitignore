@@ -16,3 +16,7 @@ aspnet-backend/obj/
 # OS
 .DS_Store
 Thumbs.db
+
+# Claude
+.claude/
+.superpowers/

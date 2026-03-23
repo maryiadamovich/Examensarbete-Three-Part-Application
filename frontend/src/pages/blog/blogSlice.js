@@ -25,6 +25,9 @@ const blogSlice = createSlice({
       state.hasMore = true;
       state.error = null;
     },
+    prependPost(state, action) {
+      state.posts = [action.payload, ...state.posts];
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -45,5 +48,5 @@ const blogSlice = createSlice({
   },
 });
 
-export const { reset } = blogSlice.actions;
+export const { reset, prependPost } = blogSlice.actions;
 export default blogSlice.reducer;

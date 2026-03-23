@@ -22,6 +22,16 @@ export async function fetchBlogs(limit = 10, cursor = null) {
   return res.json();
 }
 
+export async function createBlogPost(title, content) {
+  const res = await fetch(`${API_BASE}/api/blogs`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ title, content }),
+  });
+  if (!res.ok) throw new Error('Failed to create post');
+  return res.json();
+}
+
 export async function fetchGreeting() {
   const res = await fetch(`${API_BASE}/api/health`);
   if (!res.ok) throw new Error('Failed to fetch greeting');
