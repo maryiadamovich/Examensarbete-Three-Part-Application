@@ -1,13 +1,21 @@
 import { createRoot } from 'react-dom/client';
 
 function Nav() {
-  const links = [
-    { href: '/', label: 'Home' },
-    { href: '/users', label: 'Users' },
-    { href: '/blog', label: 'Blog' },
-  ];
-
   const current = window.location.pathname;
+  const role = localStorage.getItem('userRole');
+
+  if (!role && current !== '/') {
+    window.location.href = '/';
+    return null;
+  }
+
+  const links = [];
+  if (role && current !== '/') {
+    links.push({ href: '/blog', label: 'Blog' });
+    if (role === 'Admin') {
+      links.push({ href: '/users', label: 'Users' });
+    }
+  }
 
   return (
     <nav style={styles.nav}>

@@ -11,6 +11,10 @@ function UsersPage() {
   const [editItem, setEditItem] = useState(null);
 
   useEffect(() => {
+    if (localStorage.getItem('userRole') !== 'Admin') {
+      window.location.href = '/blog';
+      return;
+    }
     dispatch(fetchUsersThunk(dataState));
   }, [dispatch, dataState]);
 

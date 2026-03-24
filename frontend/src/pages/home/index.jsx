@@ -1,62 +1,59 @@
-import { useEffect } from 'react';
+import { useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import { Provider, useSelector, useDispatch } from 'react-redux';
-import store from './store';
-import { fetchGreetingThunk } from './homeSlice';
 
 function HomePage() {
-  const dispatch = useDispatch();
-  const { status, message, error } = useSelector((state) => state.home);
+  const [role, setRole] = useState('Viewer');
 
-  useEffect(() => {
-    if (status === 'idle') {
-      dispatch(fetchGreetingThunk());
-    }
-  }, [dispatch, status]);
+  function handleLogin() {
+    localStorage.setItem('userRole', role);
+    window.location.href = '/blog';
+  }
 
   return (
     <div style={styles.page}>
-      <h1 style={styles.heading}>Welcome</h1>
-      <p style={styles.lead}>
-        This application demonstrates React bundled with Webpack,
-        served through ASP.NET Core MVC, fetching data from a Node.js API.
-      </p>
-
       <div style={styles.card}>
-        <h2 style={styles.cardTitle}>API Status</h2>
-        {error && <p style={styles.error}>Error: {error}</p>}
-        {status === 'loading' && <p style={styles.muted}>Connecting to Node.js API...</p>}
-        {status === 'succeeded' && (
-          <p style={styles.success}>
-            Node.js API is online &mdash; {message}
-          </p>
-        )}
+        <h1 style={styles.heading}>Log in</h1>
+        <label style={styles.label}>User role</label>
+        <select style={styles.select} value={role} onChange={e => setRole(e.target.value)}>
+          <option>Viewer</option>
+          <option>Editor</option>
+          <option>Admin</option>
+        </select>
+        <button style={styles.button} onClick={handleLogin}>Log in</button>
       </div>
     </div>
   );
 }
 
 const styles = {
-  page: { padding: '2rem', maxWidth: '800px', margin: '0 auto' },
-  heading: { fontSize: '2rem', marginBottom: '0.5rem', color: '#1e293b' },
-  lead: { color: '#475569', marginBottom: '2rem', lineHeight: '1.6' },
-  card: {
-    border: '1px solid #e2e8f0',
-    borderRadius: '8px',
-    padding: '1.5rem',
-    background: '#f8fafc',
+  page: {
+    minHeight: '100vh',
+    background: 'linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 30%, #eff6ff 60%, #f5f3ff 100%)',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  cardTitle: { marginTop: 0, color: '#1e293b' },
-  muted: { color: '#94a3b8' },
-  success: { color: '#16a34a', fontWeight: '500' },
-  error: { color: '#dc2626', fontWeight: '500' },
+  card: {
+    background: 'rgba(255,255,255,0.92)',
+    borderRadius: '12px',
+    padding: '2.5rem 2rem',
+    width: '380px',
+    boxShadow: '0 8px 32px rgba(0,0,0,0.12)',
+  },
+  heading: { color: '#38bdf8ff', fontSize: '2rem', marginBottom: '1.5rem', fontWeight: 400 },
+  label: { color: '#475569', fontSize: '0.9rem', marginBottom: '0.4rem', display: 'block' },
+  select: {
+    width: '100%', padding: '0.5rem', border: '1px solid #cbd5e1',
+    borderRadius: '6px', fontSize: '1rem', marginBottom: '1.5rem',
+  },
+  button: {
+    width: '100%', padding: '0.65rem', background: '#38bdf8ff',
+    color: 'white', border: 'none', borderRadius: '6px',
+    fontSize: '1rem', cursor: 'pointer', fontWeight: 500,
+  },
 };
 
 const container = document.getElementById('content');
 if (container) {
-  createRoot(container).render(
-    <Provider store={store}>
-      <HomePage />
-    </Provider>
-  );
+  createRoot(container).render(<HomePage />);
 }

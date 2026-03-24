@@ -110,13 +110,16 @@ function BlogPage() {
     setModalOpen(false);
   }
 
+  const role = localStorage.getItem('userRole');
+  const canPost = role === 'Editor' || role === 'Admin';
+
   return (
     <div style={styles.page}>
       <div style={styles.container}>
         <h1 style={styles.heading}>Blog</h1>
         <p style={styles.sub}>Latest posts from the team.</p>
         <div style={styles.headerRow}>
-          <button style={styles.addBtn} onClick={() => setModalOpen(true)}>Add a new post</button>
+          {canPost && <button style={styles.addBtn} onClick={() => setModalOpen(true)}>Add a new post</button>}
         </div>
         {modalOpen && <AddPostModal onClose={() => setModalOpen(false)} onPublished={handlePublished} />}
         <div>
@@ -188,7 +191,7 @@ const styles = {
   },
   addBtn: {
     background: 'none',
-    border: 'none',
+    border: '1px solid black',
     color: '#1e293b',
     fontWeight: '500',
     cursor: 'pointer',
