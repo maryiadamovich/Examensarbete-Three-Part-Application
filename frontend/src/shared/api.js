@@ -8,6 +8,16 @@ export async function fetchUsers(page = 1, limit = 20, filter = null) {
   return res.json();
 }
 
+export async function updateUser(id, { name, email, role }) {
+  const res = await fetch(`${API_BASE}/api/users/${id}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name, email, role }),
+  });
+  if (!res.ok) throw new Error('Failed to update user');
+  return res.json();
+}
+
 export async function fetchSettings() {
   const res = await fetch(`${API_BASE}/api/settings`);
   if (!res.ok) throw new Error('Failed to fetch settings');

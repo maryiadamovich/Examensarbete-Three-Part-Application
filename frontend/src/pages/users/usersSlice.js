@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { fetchUsers } from '../../shared/api';
+import { fetchUsers, updateUser } from '../../shared/api';
 
 export const fetchUsersThunk = createAsyncThunk(
   'users/fetchUsers',
@@ -7,6 +7,11 @@ export const fetchUsersThunk = createAsyncThunk(
     const page = Math.floor(dataState.skip / dataState.take) + 1;
     return fetchUsers(page, dataState.take, dataState.filter);
   }
+);
+
+export const updateUserThunk = createAsyncThunk(
+  'users/updateUser',
+  ({ id, data }) => updateUser(id, data)
 );
 
 const usersSlice = createSlice({
@@ -37,6 +42,11 @@ const usersSlice = createSlice({
       .addCase(fetchUsersThunk.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.error.message;
+      })
+      .addCase(updateUserThunk.fulfilled, (state, action) => {
+        const updated = action.payload;
+        const idx = state.data.findIndex((u) => u.id === updated.id);
+        if (idx !== -1) state.data[idx] = updated;
       });
   },
 });

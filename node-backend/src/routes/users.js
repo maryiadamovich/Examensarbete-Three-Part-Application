@@ -27,6 +27,21 @@ function buildWhere(filter) {
   return { sql: 'WHERE ' + clauses.join(logic), params };
 }
 
+router.put('/:id', (req, res) => {
+  const id = parseInt(req.params.id);
+  if (isNaN(id)) return res.status(400).json({ error: 'Invalid id' });
+
+  const { name, email, role } = req.body;
+  if (!name || !email || !role) return res.status(400).json({ error: 'name, email, and role are required' });
+  if (!['admin', 'editor', 'viewer'].includes(role)) return res.status(400).json({ error: 'role must be admin, editor, or viewer' });
+
+  const result = db.prepare('UPDATE users SET name=?, email=?, role=? WHERE id=?').run(name, email, role, id);
+  if (result.changes === 0) return res.status(404).json({ error: 'User not found' });
+
+  const updated = db.prepare('SELECT * FROM users WHERE id=?').get(id);
+  res.json(updated);
+});
+
 router.get('/', (req, res) => {
   const page   = Math.max(1, parseInt(req.query.page)  || 1);
   const limit  = Math.max(1, parseInt(req.query.limit) || 10);
