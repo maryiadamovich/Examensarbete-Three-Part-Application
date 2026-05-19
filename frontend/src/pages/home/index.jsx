@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { createRoot } from 'react-dom/client';
 
 function HomePage() {
-  const [role, setRole] = useState('Viewer');
+  const [role, setRole] = useState('viewer');
 
   function handleLogin() {
     localStorage.setItem('userRole', role);
@@ -15,9 +15,9 @@ function HomePage() {
         <h1 style={styles.heading}>Log in</h1>
         <label style={styles.label}>User role</label>
         <select style={styles.select} value={role} onChange={e => setRole(e.target.value)}>
-          <option>Viewer</option>
-          <option>Editor</option>
-          <option>Admin</option>
+          <option value="viewer">Viewer</option>
+          <option value="editor">Editor</option>
+          <option value="admin">Admin</option>
         </select>
         <button style={styles.button} onClick={handleLogin}>Log in</button>
       </div>

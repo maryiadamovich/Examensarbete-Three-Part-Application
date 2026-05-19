@@ -111,7 +111,7 @@ function BlogPage() {
   }
 
   const role = localStorage.getItem('userRole');
-  const canPost = role === 'Editor' || role === 'Admin';
+  const canPost = role === 'editor' || role === 'admin';
 
   return (
     <div style={styles.page}>

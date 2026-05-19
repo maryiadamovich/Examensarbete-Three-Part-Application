@@ -12,7 +12,7 @@ function Nav() {
   const links = [];
   if (role && current !== '/') {
     links.push({ href: '/blog', label: 'Blog' });
-    if (role === 'Admin') {
+    if (role === 'admin') {
       links.push({ href: '/users', label: 'Users' });
     }
   }
