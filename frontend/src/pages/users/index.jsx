@@ -5,6 +5,7 @@ import { Grid, GridColumn as Column } from '@progress/kendo-react-grid';
 import store from './store';
 import { fetchUsersThunk, setDataState, updateUserThunk } from './usersSlice';
 
+
 function UsersPage() {
   const dispatch = useDispatch();
   const { status, data, total, error, dataState } = useSelector((state) => state.users);
@@ -50,8 +51,10 @@ function UsersPage() {
           skip={dataState.skip}
           take={dataState.take}
           filter={dataState.filter}
+          sort={dataState.sort || []}
           pageable={{ info: true, pageSizes: [20, 50, 100] }}
           filterable={{ mode: 'row' }}
+          sortable={true}
           resizable
           onRowClick={(e) => { if (e.dataItem?.id != null) enterEdit(e.dataItem); }}
           onDataStateChange={(e) => dispatch(setDataState(e.dataState))}

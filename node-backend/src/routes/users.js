@@ -53,7 +53,19 @@ router.get('/', (req, res) => {
 
   const { sql: where, params } = buildWhere(filter);
 
-  const users      = db.prepare(`SELECT * FROM users ${where} LIMIT ? OFFSET ?`).all(...params, limit, offset);
+  const ALLOWED_SORT_FIELDS = ['id', 'name', 'email', 'role'];
+  let orderBy = '';
+  try {
+    const sort = req.query.sort ? JSON.parse(req.query.sort) : [];
+    if (sort.length > 0) {
+      const parts = sort
+        .filter(s => ALLOWED_SORT_FIELDS.includes(s.field))
+        .map(s => `${s.field} ${s.dir === 'desc' ? 'DESC' : 'ASC'}`);
+      if (parts.length) orderBy = `ORDER BY ${parts.join(', ')}`;
+    }
+  } catch { /* ignore malformed sort */ }
+
+  const users      = db.prepare(`SELECT * FROM users ${where} ${orderBy} LIMIT ? OFFSET ?`).all(...params, limit, offset);
   const { total }  = db.prepare(`SELECT COUNT(*) AS total FROM users ${where}`).get(...params);
   const totalPages = Math.ceil(total / limit);
 

@@ -19,7 +19,7 @@ function Nav() {
 
   return (
     <nav style={styles.nav}>
-      <span style={styles.brand}>MyApp</span>
+      <a href="/" style={styles.brand}>MyApp</a>
       <ul style={styles.list}>
         {links.map(({ href, label }) => (
           <li key={href} style={styles.item}>
@@ -57,6 +57,8 @@ const styles = {
     fontWeight: 'bold',
     fontSize: '1.2rem',
     letterSpacing: '0.05em',
+    color: '#f8fafc',
+    textDecoration: 'none',
   },
   list: {
     display: 'flex',

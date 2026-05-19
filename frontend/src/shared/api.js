@@ -1,8 +1,9 @@
 const API_BASE = 'http://localhost:3001';
 
-export async function fetchUsers(page = 1, limit = 20, filter = null) {
+export async function fetchUsers(page = 1, limit = 20, filter = null, sort = null) {
   const params = new URLSearchParams({ page, limit });
   if (filter) params.set('filter', JSON.stringify(filter));
+  if (sort && sort.length) params.set('sort', JSON.stringify(sort));
   const res = await fetch(`${API_BASE}/api/users?${params}`);
   if (!res.ok) throw new Error('Failed to fetch users');
   return res.json();

@@ -5,7 +5,7 @@ export const fetchUsersThunk = createAsyncThunk(
   'users/fetchUsers',
   (dataState) => {
     const page = Math.floor(dataState.skip / dataState.take) + 1;
-    return fetchUsers(page, dataState.take, dataState.filter);
+    return fetchUsers(page, dataState.take, dataState.filter, dataState.sort);
   }
 );
 
@@ -21,7 +21,7 @@ const usersSlice = createSlice({
     data: [],
     total: 0,
     error: null,
-    dataState: { skip: 0, take: 20, filter: null },
+    dataState: { skip: 0, take: 20, filter: null, sort: [] },
   },
   reducers: {
     setDataState(state, action) {
