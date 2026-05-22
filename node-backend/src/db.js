@@ -1,6 +1,7 @@
 const Database = require('better-sqlite3');
 const path = require('path');
 const fs = require('fs');
+const bcrypt = require('bcryptjs');
 
 const DATA_DIR = path.join(__dirname, '..', 'data');
 const DB_PATH = path.join(DATA_DIR, 'database.db');
@@ -21,6 +22,12 @@ db.exec(`
     role  TEXT NOT NULL
   )
 `);
+
+try {
+  db.exec('ALTER TABLE users ADD COLUMN password_hash TEXT');
+} catch (e) {
+  if (!e.message.includes('duplicate column name')) throw e;
+}
 
 // Seed 1000 users if table is empty
 const count = db.prepare('SELECT COUNT(*) AS cnt FROM users').get().cnt;
@@ -48,6 +55,26 @@ if (count === 0) {
   });
   insertMany();
   console.log('Database seeded with 1000 users.');
+}
+
+const SEED_HASH = bcrypt.hashSync('password', 4); // cost 4 for speed — demo data only
+const usersWithoutHash = db.prepare('SELECT id FROM users WHERE password_hash IS NULL').all();
+if (usersWithoutHash.length > 0) {
+  const setHash = db.prepare('UPDATE users SET password_hash = ? WHERE id = ?');
+  db.transaction(() => {
+    for (const u of usersWithoutHash) setHash.run(SEED_HASH, u.id);
+  })();
+  console.log(`Seeded password hashes for ${usersWithoutHash.length} users.`);
+}
+
+const demoAccounts = [
+  { id: 1, email: 'admin@example.com',  password: 'Adm1n@2025!' },
+  { id: 2, email: 'editor@example.com', password: 'Ed1t0r#2025!' },
+  { id: 3, email: 'viewer@example.com', password: 'V1ew3r$2025!' },
+];
+const updateDemo = db.prepare('UPDATE users SET email = ?, password_hash = ? WHERE id = ?');
+for (const { id, email, password } of demoAccounts) {
+  updateDemo.run(email, bcrypt.hashSync(password, 10), id);
 }
 
 // Create posts table

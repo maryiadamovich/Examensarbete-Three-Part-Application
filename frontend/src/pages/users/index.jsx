@@ -53,7 +53,7 @@ function UsersPage() {
           filter={dataState.filter}
           sort={dataState.sort || []}
           pageable={{ info: true, pageSizes: [20, 50, 100] }}
-          filterable={{ mode: 'row' }}
+          filterable={true}
           sortable={true}
           resizable
           onRowClick={(e) => { if (e.dataItem?.id != null) enterEdit(e.dataItem); }}

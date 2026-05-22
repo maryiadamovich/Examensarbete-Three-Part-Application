@@ -1,32 +1,28 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { fetchGreeting } from '../../shared/api';
+import { loginUser } from '../../shared/api';
 
-export const fetchGreetingThunk = createAsyncThunk(
-  'home/fetchGreeting',
-  () => fetchGreeting()
+export const loginThunk = createAsyncThunk(
+  'home/login',
+  async ({ email, password }, { rejectWithValue }) => {
+    try {
+      return await loginUser(email, password);
+    } catch (e) {
+      return rejectWithValue(e.message);
+    }
+  }
 );
 
 const homeSlice = createSlice({
   name: 'home',
-  initialState: {
-    status: 'idle',
-    message: null,
-    error: null,
-  },
+  initialState: { status: 'idle', error: null },
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(fetchGreetingThunk.pending, (state) => {
-        state.status = 'loading';
-        state.error = null;
-      })
-      .addCase(fetchGreetingThunk.fulfilled, (state, action) => {
-        state.status = 'succeeded';
-        state.message = action.payload.message;
-      })
-      .addCase(fetchGreetingThunk.rejected, (state, action) => {
+      .addCase(loginThunk.pending,   (state) => { state.status = 'loading'; state.error = null; })
+      .addCase(loginThunk.fulfilled, (state) => { state.status = 'succeeded'; })
+      .addCase(loginThunk.rejected,  (state, action) => {
         state.status = 'failed';
-        state.error = action.error.message;
+        state.error  = action.payload ?? 'Login failed';
       });
   },
 });
